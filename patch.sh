@@ -1,16 +1,5 @@
 #!/bin/sh
 
-#---------------------------#
-#     Made by XDream8       #
-#---------------------------#
-#           deps            #
-#---------------------------#
-# curl, wget or $downloader #
-#          awk              #
-#         java(17)          #
-#          grep             #
-#---------------------------#
-
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
@@ -90,8 +79,8 @@ patch() {
 
 main() {
 
-	youtube_version=17.26.35
-	youtube_apk=https://github.com/XDream8/revanced-creator/releases/download/v0.1/YouTube-$youtube_version.apk
+	youtube_version=17.27.35
+	youtube_apk=https://github.com/kawinpattanai/revanced/releases/download/1.0/YouTube-$youtube_version.apk
 
 	if [ -z "$downloader" ] && [ "$(command -v curl)" ]; then
 		downloader="curl -OL"
