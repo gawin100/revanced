@@ -79,7 +79,7 @@ patch() {
 
 main() {
 
-	youtube_version=17.27.35
+	youtube_version=17.26.35
 	youtube_apk=https://github.com/kawinpattanai/revanced/releases/download/1.0/YouTube-$youtube_version.apk
 
 	if [ -z "$downloader" ] && [ "$(command -v curl)" ]; then
