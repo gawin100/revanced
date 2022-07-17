@@ -29,8 +29,14 @@ get_latest_version_info() {
 }
 
 remove_old() {
-	printf '%b\n' "${BLUE}removing olds${NC}"
-	rm -f revanced-cli-*.jar revanced-patches-*.jar app-release-unsigned.apk YouTube-$youtube_version.apk *.keystore
+	if [ ! "$(command -v find)" ]; then
+		[ ! -f "$cli_filename" ] && [ -f "revanced-cli-*-all.jar" ] && ( printf '%b\n' "${RED}removing old revanced-cli${NC}" && rm -f revanced-cli-*.jar )
+		[ ! -f "$patches_filename" ] && [ -f "revanced-patches-*-all.jar" ] && (printf '%s\n' "${RED}removing old revanced-patches${NC}" && rm -f revanced-patches-*.jar )
+		[ ! -f "$youtube_filename" ] && [ -f "YouTube-*.apk" ] && (printf '%s\n' "${RED}removing old youtube${NC}" && rm YouTube-$youtube_version )
+		rm -f $integrations_filename
+	else
+		find . -maxdepth 1 -type f \( -name "revanced-*.jar" -or -name "$integrations_filename" \) ! \( -name "*.keystore" -or -name "$cli_filename" -or -name "$patches_filename" -or -name "$youtube_filename" \) -delete
+	fi
 }
 
 download_needed() {
@@ -39,9 +45,9 @@ download_needed() {
 
 	printf '%b\n' "${BLUE}Downloading revanced-cli, revanced-patches and revanced-integrations${NC}"
 	for i in \
-		https://github.com/revanced/revanced-cli/releases/download/v$revanced_cli_version/revanced-cli-$revanced_cli_version-all.jar \
-		https://github.com/revanced/revanced-patches/releases/download/v$revanced_patches_version/revanced-patches-$revanced_patches_version.jar \
-		https://github.com/revanced/revanced-integrations/releases/download/v$revanced_integrations_version/app-release-unsigned.apk \
+		https://github.com/revanced/revanced-cli/releases/download/v$revanced_cli_version/$cli_filename \
+		https://github.com/revanced/revanced-patches/releases/download/v$revanced_patches_version/$patches_filename \
+		https://github.com/revanced/revanced-integrations/releases/download/v$revanced_integrations_version/$integrations_filename \
 		$youtube_apk
 	do
 		n=$(awk "BEGIN {print $n+1}")
@@ -59,19 +65,19 @@ patch() {
 	printf '%b\n' "${BLUE}patching process started(${RED}$root_text${BLUE})${NC}"
 	printf '%b\n' "${BLUE}it may take a while please be patient${NC}"
 	if [ $nonroot = 1 ]; then
-		java -jar revanced-cli-$revanced_cli_version-all.jar \
-		 -a YouTube-$youtube_version.apk \
+		java -jar $cli_filename \
+		 -a $youtube_filename \
 		 -c \
 		 -o revanced-$youtube_version-$root_text.apk \
-		 -b revanced-patches-$revanced_patches_version.jar \
-		 -m app-release-unsigned.apk
+		 -b $patches_filename \
+		 -m $integrations_filename
 	else
-		java -jar revanced-cli-$revanced_cli_version-all.jar \
-		 -a YouTube-$youtube_version.apk \
+		java -jar $cli_filename \
+		 -a $youtube_filename \
 		 -c \
 		 -o revanced-$youtube_version-$root_text.apk \
-		 -b revanced-patches-$revanced_patches_version.jar \
-		 -m app-release-unsigned.apk \
+		 -b $patches_filename \
+		 -m $integrations_filename \
 		 -e microg-support \
 		 --mount
 	fi
@@ -80,10 +86,11 @@ patch() {
 main() {
 
 	youtube_version=17.26.35
-	youtube_apk=https://github.com/kawinpattanai/revanced/releases/download/1.0/YouTube-$youtube_version.apk
+	youtube_filename=YouTube-$youtube_version.apk
+	youtube_apk=https://github.com/kawinpattanai/revanced/releases/download/1.0/$youtube_filename
 
 	if [ -z "$downloader" ] && [ "$(command -v curl)" ]; then
-		downloader="curl -OL"
+		downloader="curl -qLJO"
 	elif [ -z "$downloader" ] && [ "$(command -v wget)" ]; then
 		downloader="wget"
 	fi
@@ -105,6 +112,11 @@ main() {
 	[ -z "$nonroot" ] && nonroot=1
 
 	get_latest_version_info
+
+	cli_filename=revanced-cli-$revanced_cli_version-all.jar
+	patches_filename=revanced-patches-$revanced_patches_version.jar
+	integrations_filename=app-release-unsigned.apk
+
 	remove_old
 	download_needed
 	patch
