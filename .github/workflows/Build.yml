@@ -24,6 +24,8 @@ jobs:
 
        - name: Build non-root variant
          run: |
+          curl -OL https://github.com/kawinpattanai/revanced/releases/download/1.0/revanced-creator.keystore
+          export additional_args="--keystore=revanced-creator.keystore"
           sh -c "$(curl https://raw.githubusercontent.com/kawinpattanai/revanced/main/patch.sh)"
           curl -OL https://github.com/kawinpattanai/revanced/releases/download/1.0/vanced-microg.apk
 
@@ -33,5 +35,17 @@ jobs:
            name: revanced-non-root
            path: |
             revanced-*-non-root.apk
-            revanced-music-*-non-root.apk
             vanced-microg.apk
+
+       - name: Build youtube-music variant
+         run: |
+          curl -OL https://github.com/kawinpattanai/revanced/releases/download/1.0/revanced-creator-music.keystore
+          export additional_args="--keystore=revanced-creator-music.keystore"
+          export what_to_patch="youtube-music"
+          sh -c "$(curl https://raw.githubusercontent.com/kawinpattanai/revanced/main/patch.sh)"
+
+       - name: Upload Build Artifact(YouTube-Music)
+         uses: actions/upload-artifact@v3
+         with:
+           name: revanced-music
+           path: revanced-music-*-non-root.apk
