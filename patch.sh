@@ -1,16 +1,5 @@
 #!/bin/sh
 
-#---------------------------#
-#     Made by XDream8       #
-#---------------------------#
-#           deps            #
-#---------------------------#
-# curl, wget or $downloader #
-#          awk              #
-#         java(17)          #
-#          grep             #
-#---------------------------#
-
 RED='\033[0;31m'
 YELLOW='\033[1;33m'
 BLUE='\033[0;34m'
@@ -155,7 +144,7 @@ main() {
 
     ## what should we patch
     if [ "$what_to_patch" = "youtube" ]; then
-        [ -z "$apk_version" ] && apk_version=17.27.39
+        [ -z "$apk_version" ] && apk_version=17.28.34
         apk_filename=YouTube-$apk_version.apk
         output_apk_name=revanced-$apk_version-$root_text.apk
     elif [ "$what_to_patch" = "youtube-music" ]; then
