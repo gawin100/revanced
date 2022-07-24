@@ -33,4 +33,5 @@ jobs:
            name: revanced-non-root
            path: |
             revanced-*-non-root.apk
+            revanced-music-*-non-root.apk
             vanced-microg.apk
