@@ -144,11 +144,11 @@ main() {
 
     ## what should we patch
     if [ "$what_to_patch" = "youtube" ]; then
-        [ -z "$apk_version" ] && apk_version=17.28.34
+        [ -z "$apk_version" ] && apk_version=17.29.34
         apk_filename=YouTube-$apk_version.apk
         output_apk_name=revanced-$apk_version-$root_text.apk
     elif [ "$what_to_patch" = "youtube-music" ]; then
-        [ -z "$apk_version1" ] && apk_version1=5.14.53
+        [ -z "$apk_version1" ] && apk_version1=5.16.51
         apk_filename=YouTube-Music-$apk_version1.apk
         output_apk_name=revanced-music-$apk_version1-$root_text.apk
     fi
